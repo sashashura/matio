@@ -43,9 +43,9 @@ jobs:
 
     - run: |
         ./autogen.sh
-        ./configure --disable-tests --disable-tools
+        ./configure --disable-tests
         make
-        make install
+        sudo make install
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
