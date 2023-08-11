@@ -20,6 +20,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+    - run: |
+        sudo apt update | sudo apt get gcc-4.8-multilib linux-libc-dev g++-4.8 texlive texinfo valgrind
+        
     - uses: actions/checkout@v3
       with:
         fetch-depth: 5
