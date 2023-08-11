@@ -23,7 +23,7 @@ jobs:
     steps:
     - if: ${{ matrix.os == 'ubuntu-latest' }}
       run: |
-        add-apt-repository ppa:ubuntu-toolchain-r/test
+        #add-apt-repository ppa:ubuntu-toolchain-r/test
         apt-get update
         apt-get install -y linux-libc-dev
         apt-get install -y texlive
