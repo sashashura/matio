@@ -21,3 +21,7 @@ jobs:
       with:
         fetch-depth: 5
         submodules: true
+
+    - run: |
+        pip install --upgrade pip
+        pip install --user urllib3==1.26.16 cpp-coveralls
