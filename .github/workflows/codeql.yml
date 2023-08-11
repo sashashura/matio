@@ -43,7 +43,7 @@ jobs:
 
     - run: |
         ./autogen.sh
-        ./configure --disable-tests
+        ./configure --disable-tests --disable-tools
         make
         make install
 
