@@ -1,0 +1,21 @@
+name: "CodeQL"
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        compiler: [ 'gcc-4.8', 'clang' ]
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 5
+        submodules: true
