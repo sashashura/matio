@@ -1,8 +1,8 @@
-name: "CodeQL"
+name: "Migration from travis"
 
 on:
-  push:
-  pull_request:
+  #push:
+  #pull_request:
   workflow_dispatch:
 
 jobs:
