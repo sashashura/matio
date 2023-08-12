@@ -19,9 +19,132 @@ jobs:
             HDF5_VERSION: 1.14
             HDF5_PATCH_VERSION: 1-2
             MAX_RANK: 3
+            
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            ENABLE_EXTENDED_SPARSE: yes
+            ENABLE_MAT73: yes
+            WITH_ZLIB: $GITHUB_WORKSPACE/zlib
+            HDF5_VERSION: 1.12
+            HDF5_PATCH_VERSION: 2
+            MAX_RANK: 3
+
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            ENABLE_EXTENDED_SPARSE: yes
+            ENABLE_MAT73: yes
+            WITH_ZLIB: $GITHUB_WORKSPACE/zlib
+            HDF5_VERSION: 1.10
+            HDF5_PATCH_VERSION: 10
+            MAX_RANK: 3
+
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            ENABLE_EXTENDED_SPARSE: yes
+            ENABLE_MAT73: yes
+            WITH_ZLIB: yes
+            HDF5_VERSION: 1.8
+            HDF5_PATCH_VERSION: 23
+            MAX_RANK: 3
+
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            ENABLE_EXTENDED_SPARSE: yes
+            ENABLE_MAT73: yes
+            WITH_ZLIB: yes
+            HDF5_VERSION: 1.8
+            HDF5_PATCH_VERSION: 23
+            MAX_RANK: 1
+
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            ENABLE_EXTENDED_SPARSE: yes
+            ENABLE_MAT73: yes
+            WITH_ZLIB: no
+            HDF5_VERSION: 1.8
+            HDF5_PATCH_VERSION: 23
+            MAX_RANK: 3
+
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            ENABLE_EXTENDED_SPARSE: yes
+            ENABLE_MAT73: no
+            WITH_ZLIB: yes
+            HDF5_VERSION: 1.8
+            HDF5_PATCH_VERSION: 23
+            MAX_RANK: 3
+
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            ENABLE_EXTENDED_SPARSE: yes
+            ENABLE_MAT73: no
+            WITH_ZLIB: no
+            HDF5_VERSION: 1.8
+            HDF5_PATCH_VERSION: 23
+            MAX_RANK: 3
+
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            ENABLE_EXTENDED_SPARSE: no
+            ENABLE_MAT73: yes
+            WITH_ZLIB: yes
+            HDF5_VERSION: 1.8
+            HDF5_PATCH_VERSION: 23
+            MAX_RANK: 3
+
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            ENABLE_EXTENDED_SPARSE: no
+            ENABLE_MAT73: yes
+            WITH_ZLIB: no
+            HDF5_VERSION: 1.8
+            HDF5_PATCH_VERSION: 23
+            MAX_RANK: 3
+
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            ENABLE_EXTENDED_SPARSE: no
+            ENABLE_MAT73: no
+            WITH_ZLIB: yes
+            HDF5_VERSION: 1.8
+            HDF5_PATCH_VERSION: 23
+            MAX_RANK: 3
+
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            ENABLE_EXTENDED_SPARSE: no
+            ENABLE_MAT73: no
+            WITH_ZLIB: no
+            HDF5_VERSION: 1.8
+            HDF5_PATCH_VERSION: 23
+            MAX_RANK: 3
+
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            USE_CMAKE: yes
+            ENABLE_EXTENDED_SPARSE: yes
+            ENABLE_MAT73: yes
+            WITH_ZLIB: yes
+            HDF5_VERSION: 1.10
+            HDF5_PATCH_VERSION: 10
+            MAX_RANK: 3
+
+          - compiler: gcc-4.8
+            os: ubuntu-latest
+            USE_CMAKE: yes
+            USE_CONAN: yes
+            ENABLE_EXTENDED_SPARSE: yes
+            ENABLE_MAT73: yes
+            WITH_ZLIB: yes
+            
           - compiler: clang
-            os: macos-latest
-            use_conan: yes
+            os: ubuntu-latest
+            ENABLE_EXTENDED_SPARSE: yes
+            ENABLE_MAT73: yes
+            WITH_ZLIB: yes
+            HDF5_VERSION: 1.8
+            HDF5_PATCH_VERSION: 23
+            MAX_RANK: 3
         
     runs-on: ${{ matrix.os }}
     container: ubuntu:16.04
@@ -63,13 +186,14 @@ jobs:
         echo "TRAVIS_CPU_ARCH=$arch" >> $GITHUB_ENV
         echo "TRAVIS_BUILD_DIR=$GITHUB_WORKSPACE" >> $GITHUB_ENV
         echo "CC=${{matrix.compiler}}" >> $GITHUB_ENV
-        echo "USE_CONAN=${{matrix.use_conan}}" >> $GITHUB_ENV
         echo "ENABLE_EXTENDED_SPARSE=${{matrix.ENABLE_EXTENDED_SPARSE}}" >> $GITHUB_ENV
         echo "ENABLE_MAT73=${{matrix.ENABLE_MAT73}}" >> $GITHUB_ENV
         echo "WITH_ZLIB=${{matrix.WITH_ZLIB}}" >> $GITHUB_ENV
         echo "HDF5_VERSION=${{matrix.HDF5_VERSION}}" >> $GITHUB_ENV
         echo "HDF5_PATCH_VERSION=${{matrix.HDF5_PATCH_VERSION}}" >> $GITHUB_ENV
         echo "MAX_RANK=${{matrix.MAX_RANK}}" >> $GITHUB_ENV
+        echo "USE_CMAKE=${{matrix.USE_CMAKE}}" >> $GITHUB_ENV
+        echo "USE_CONAN=${{matrix.USE_CONAN}}" >> $GITHUB_ENV
 
     - run: |
         ./.ci/travis_before_install.sh
