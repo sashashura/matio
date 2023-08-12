@@ -32,7 +32,7 @@ jobs:
         rm git.zip
         cd git-*
         make prefix=/usr/local all
-        sudo make prefix=/usr/local install
+        make prefix=/usr/local install
         cd ..
         
     - uses: actions/checkout@v3
