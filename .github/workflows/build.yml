@@ -187,8 +187,8 @@ jobs:
     - run: |
         apt-get update
         apt install -y software-properties-common lsb-release
-        apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main"
         apt-add-repository ppa:ubuntu-toolchain-r/test
+        apt-get update
         apt-get install -y linux-libc-dev texlive texinfo valgrind gcc-4.8-multilib g++-4.8 \
           wget make libssl-dev libcurl4-openssl-dev libexpat1-dev gettext python3-pip autoconf \
           automake libtool-bin curl
@@ -207,7 +207,6 @@ jobs:
     - name: Install CMake
       run: |
         apt-get install -y apt-transport-https ca-certificates
-        apt install -y software-properties-common lsb-release
         wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
         apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main"
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6AF7F09730B3F0A4
