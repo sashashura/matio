@@ -47,18 +47,21 @@ jobs:
         submodules: true
         
     - run: |
+        os=""
         if [ "${{matrix.os}}" = "ubuntu-latest" ]; then
           os="linux"
         elif [ "${{matrix.os}}" = "osx" ]; then
           os="linux"
         fi
         echo "TRAVIS_OS_NAME=$os" >> $GITHUB_ENV
+        arch=""
         if [ "$RUNNER_ARCH" = "ARM64" ]; then
           arch="arm64"
         elif [ "RUNNER_ARCH" = "X64" ]; then
           arch="amd64"
         fi
         echo "TRAVIS_CPU_ARCH=$arch" >> $GITHUB_ENV
+        echo "TRAVIS_BUILD_DIR=$GITHUB_WORKSPACE" >> $GITHUB_ENV
         echo "CC=${{matrix.compiler}}" >> $GITHUB_ENV
         echo "USE_CONAN=${{matrix.use_conan}}" >> $GITHUB_ENV
         echo "ENABLE_EXTENDED_SPARSE=${{matrix.ENABLE_EXTENDED_SPARSE}}" >> $GITHUB_ENV
