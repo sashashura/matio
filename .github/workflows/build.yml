@@ -185,11 +185,12 @@ jobs:
 
     steps:
     - run: |
-        #add-apt-repository ppa:ubuntu-toolchain-r/test
+        apt-add-repository ppa:ubuntu-toolchain-r/test
         apt-get update
         apt-get install -y linux-libc-dev texlive texinfo valgrind gcc-4.8-multilib g++-4.8 \
           wget make libssl-dev libcurl4-openssl-dev libexpat1-dev gettext python3-pip autoconf \
           automake libtool-bin curl
+        pip3 install --upgrade pip
 
     - name: Install git
       run: |
