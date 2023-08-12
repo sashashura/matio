@@ -25,12 +25,8 @@ jobs:
       run: |
         #add-apt-repository ppa:ubuntu-toolchain-r/test
         apt-get update
-        apt-get install -y linux-libc-dev
-        apt-get install -y texlive
-        apt-get install -y texinfo
-        apt-get install -y valgrind
-        apt-get install -y gcc-4.8-multilib
-        apt-get install -y g++-4.8
+        apt-get install -y linux-libc-dev texlive texinfo valgrind gcc-4.8-multilib g++-4.8
+        apt-get install -y git
         
     - uses: actions/checkout@v3
       with:
