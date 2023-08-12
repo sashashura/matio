@@ -46,6 +46,7 @@ jobs:
         echo "MAX_RANK=${{matrix.MAX_RANK}}" >> $GITHUB_ENV
         echo "USE_CMAKE=${{matrix.USE_CMAKE}}" >> $GITHUB_ENV
         echo "USE_CONAN=${{matrix.USE_CONAN}}" >> $GITHUB_ENV
+        echo "PATH=/github/home/.local/bin:$PATH" >> $GITHUB_ENV
 
     - run: |
         ./.ci/travis_before_install.sh
@@ -188,7 +189,7 @@ jobs:
         apt-get update
         apt-get install -y linux-libc-dev texlive texinfo valgrind gcc-4.8-multilib g++-4.8 \
           wget make libssl-dev libcurl4-openssl-dev libexpat1-dev gettext python3-pip autoconf \
-          automake libtool-bin cmake curl
+          automake libtool-bin curl
         wget https://github.com/git/git/archive/v2.18.2.zip -O git.zip
         unzip git.zip
         rm git.zip
@@ -196,6 +197,13 @@ jobs:
         make prefix=/usr/local all
         make prefix=/usr/local install
         cd ..
+
+        apt install -y software-properties-common lsb-release
+        wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
+        apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main"
+        apt update
+        apt install cmake
+        
         curl "https://bootstrap.pypa.io/pip/2.7/get-pip.py" -o "get-pip.py"
         python get-pip.py
         
