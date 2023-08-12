@@ -13,9 +13,15 @@ jobs:
         include: 
           - compiler: gcc-4.8
             os: ubuntu-latest
-            use_conan: yes
+            ENABLE_EXTENDED_SPARSE: yes
+            ENABLE_MAT73: yes
+            WITH_ZLIB: $GITHUB_WORKSPACE/zlib
+            HDF5_VERSION: 1.14
+            HDF5_PATCH_VERSION: 1-2
+            MAX_RANK: 3
           - compiler: clang
             os: macos-latest
+            use_conan: yes
         
     runs-on: ${{ matrix.os }}
     container: ubuntu:16.04
@@ -26,7 +32,7 @@ jobs:
         #add-apt-repository ppa:ubuntu-toolchain-r/test
         apt-get update
         apt-get install -y linux-libc-dev texlive texinfo valgrind gcc-4.8-multilib g++-4.8 \
-          wget make libssl-dev libcurl4-openssl-dev libexpat1-dev gettext
+          wget make libssl-dev libcurl4-openssl-dev libexpat1-dev gettext python3-pip
         wget https://github.com/git/git/archive/v2.18.2.zip -O git.zip
         unzip git.zip
         rm git.zip
@@ -45,9 +51,22 @@ jobs:
           os="linux"
         elif [ "${{matrix.os}}" = "osx" ]; then
           os="linux"
-        fi     
+        fi
         echo "TRAVIS_OS_NAME=$os" >> $GITHUB_ENV
+        if [ "$RUNNER_ARCH" = "ARM64" ]; then
+          arch="arm64"
+        elif [ "RUNNER_ARCH" = "X64" ]; then
+          arch="amd64"
+        fi
+        echo "TRAVIS_CPU_ARCH=$arch" >> $GITHUB_ENV
+        echo "CC=${{matrix.compiler}}" >> $GITHUB_ENV
         echo "USE_CONAN=${{matrix.use_conan}}" >> $GITHUB_ENV
+        echo "ENABLE_EXTENDED_SPARSE=${{matrix.ENABLE_EXTENDED_SPARSE}}" >> $GITHUB_ENV
+        echo "ENABLE_MAT73=${{matrix.ENABLE_MAT73}}" >> $GITHUB_ENV
+        echo "WITH_ZLIB=${{matrix.WITH_ZLIB}}" >> $GITHUB_ENV
+        echo "HDF5_VERSION=${{matrix.HDF5_VERSION}}" >> $GITHUB_ENV
+        echo "HDF5_PATCH_VERSION=${{matrix.HDF5_PATCH_VERSION}}" >> $GITHUB_ENV
+        echo "MAX_RANK=${{matrix.MAX_RANK}}" >> $GITHUB_ENV
 
     - run: |
         ./.ci/travis_before_install.sh
