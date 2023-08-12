@@ -6,13 +6,74 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        include: 
+          - compiler: clang
+            ENABLE_EXTENDED_SPARSE: yes
+            ENABLE_MAT73: yes
+            WITH_ZLIB: yes
+            HDF5_VERSION: 1.8
+            HDF5_PATCH_VERSION: 23
+            MAX_RANK: 3
+        
+    runs-on: macos-latest
+
+    steps:
+    - if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: |
+        #add-apt-repository ppa:ubuntu-toolchain-r/test
+        apt-get update
+        apt-get install -y linux-libc-dev texlive texinfo valgrind gcc-4.8-multilib g++-4.8 \
+          wget make libssl-dev libcurl4-openssl-dev libexpat1-dev gettext python3-pip autoconf automake libtool-bin
+        wget https://github.com/git/git/archive/v2.18.2.zip -O git.zip
+        unzip git.zip
+        rm git.zip
+        cd git-*
+        make prefix=/usr/local all
+        make prefix=/usr/local install
+        cd ..
+        
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 5
+        submodules: true
+        
+    - run: |
+        echo "TRAVIS_OS_NAME=osx" >> $GITHUB_ENV
+        arch=""
+        if [ "$RUNNER_ARCH" = "ARM64" ]; then
+          arch="arm64"
+        elif [ "$RUNNER_ARCH" = "X64" ]; then
+          arch="amd64"
+        fi
+        echo "TRAVIS_CPU_ARCH=$arch" >> $GITHUB_ENV
+        echo "TRAVIS_BUILD_DIR=$GITHUB_WORKSPACE" >> $GITHUB_ENV
+        echo "CC=${{matrix.compiler}}" >> $GITHUB_ENV
+        echo "ENABLE_EXTENDED_SPARSE=${{matrix.ENABLE_EXTENDED_SPARSE}}" >> $GITHUB_ENV
+        echo "ENABLE_MAT73=${{matrix.ENABLE_MAT73}}" >> $GITHUB_ENV
+        echo "WITH_ZLIB=${{matrix.WITH_ZLIB}}" >> $GITHUB_ENV
+        echo "HDF5_VERSION=${{matrix.HDF5_VERSION}}" >> $GITHUB_ENV
+        echo "HDF5_PATCH_VERSION=${{matrix.HDF5_PATCH_VERSION}}" >> $GITHUB_ENV
+        echo "MAX_RANK=${{matrix.MAX_RANK}}" >> $GITHUB_ENV
+        echo "USE_CMAKE=${{matrix.USE_CMAKE}}" >> $GITHUB_ENV
+        echo "USE_CONAN=${{matrix.USE_CONAN}}" >> $GITHUB_ENV
+
+    - run: |
+        ./.ci/travis_before_install.sh
+        ./.ci/travis_install.sh
+        ./.ci/travis_before_script.sh
+        ./.ci/travis_script.sh
+        ./.ci/travis_after_success.sh
+
+  build-linux:
     strategy:
       fail-fast: false
       matrix:
         include: 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: yes
             ENABLE_MAT73: yes
             WITH_ZLIB: $GITHUB_WORKSPACE/zlib
@@ -21,7 +82,6 @@ jobs:
             MAX_RANK: 3
             
           - compiler: gcc-4.8
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: yes
             ENABLE_MAT73: yes
             WITH_ZLIB: $GITHUB_WORKSPACE/zlib
@@ -30,7 +90,6 @@ jobs:
             MAX_RANK: 3
 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: yes
             ENABLE_MAT73: yes
             WITH_ZLIB: $GITHUB_WORKSPACE/zlib
@@ -39,7 +98,6 @@ jobs:
             MAX_RANK: 3
 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: yes
             ENABLE_MAT73: yes
             WITH_ZLIB: yes
@@ -48,7 +106,6 @@ jobs:
             MAX_RANK: 3
 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: yes
             ENABLE_MAT73: yes
             WITH_ZLIB: yes
@@ -57,7 +114,6 @@ jobs:
             MAX_RANK: 1
 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: yes
             ENABLE_MAT73: yes
             WITH_ZLIB: no
@@ -66,7 +122,6 @@ jobs:
             MAX_RANK: 3
 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: yes
             ENABLE_MAT73: no
             WITH_ZLIB: yes
@@ -75,7 +130,6 @@ jobs:
             MAX_RANK: 3
 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: yes
             ENABLE_MAT73: no
             WITH_ZLIB: no
@@ -84,7 +138,6 @@ jobs:
             MAX_RANK: 3
 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: no
             ENABLE_MAT73: yes
             WITH_ZLIB: yes
@@ -93,7 +146,6 @@ jobs:
             MAX_RANK: 3
 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: no
             ENABLE_MAT73: yes
             WITH_ZLIB: no
@@ -102,7 +154,6 @@ jobs:
             MAX_RANK: 3
 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: no
             ENABLE_MAT73: no
             WITH_ZLIB: yes
@@ -111,7 +162,6 @@ jobs:
             MAX_RANK: 3
 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: no
             ENABLE_MAT73: no
             WITH_ZLIB: no
@@ -120,7 +170,6 @@ jobs:
             MAX_RANK: 3
 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             USE_CMAKE: yes
             ENABLE_EXTENDED_SPARSE: yes
             ENABLE_MAT73: yes
@@ -130,7 +179,6 @@ jobs:
             MAX_RANK: 3
 
           - compiler: gcc-4.8
-            os: ubuntu-latest
             USE_CMAKE: yes
             USE_CONAN: yes
             ENABLE_EXTENDED_SPARSE: yes
@@ -138,7 +186,6 @@ jobs:
             WITH_ZLIB: yes
             
           - compiler: clang
-            os: ubuntu-latest
             ENABLE_EXTENDED_SPARSE: yes
             ENABLE_MAT73: yes
             WITH_ZLIB: yes
@@ -146,7 +193,7 @@ jobs:
             HDF5_PATCH_VERSION: 23
             MAX_RANK: 3
         
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     container: ubuntu:16.04
 
     steps:
@@ -170,17 +217,11 @@ jobs:
         submodules: true
         
     - run: |
-        os=""
-        if [ "${{matrix.os}}" = "ubuntu-latest" ]; then
-          os="linux"
-        elif [ "${{matrix.os}}" = "osx" ]; then
-          os="linux"
-        fi
-        echo "TRAVIS_OS_NAME=$os" >> $GITHUB_ENV
+        echo "TRAVIS_OS_NAME=linux" >> $GITHUB_ENV
         arch=""
         if [ "$RUNNER_ARCH" = "ARM64" ]; then
           arch="arm64"
-        elif [ "RUNNER_ARCH" = "X64" ]; then
+        elif [ "$RUNNER_ARCH" = "X64" ]; then
           arch="amd64"
         fi
         echo "TRAVIS_CPU_ARCH=$arch" >> $GITHUB_ENV
