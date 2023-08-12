@@ -26,7 +26,13 @@ jobs:
         #add-apt-repository ppa:ubuntu-toolchain-r/test
         apt-get update
         apt-get install -y linux-libc-dev texlive texinfo valgrind gcc-4.8-multilib g++-4.8
-        apt-get install -y git
+        wget https://github.com/git/git/archive/v2.18.zip -O git.zip
+        unzip git.zip
+        rm git.zip
+        cd git-*
+        make prefix=/usr/local all
+        sudo make prefix=/usr/local install
+        cd ..
         
     - uses: actions/checkout@v3
       with:
