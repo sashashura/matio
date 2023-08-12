@@ -25,7 +25,7 @@ jobs:
       run: |
         #add-apt-repository ppa:ubuntu-toolchain-r/test
         apt-get update
-        apt-get install -y linux-libc-dev texlive texinfo valgrind gcc-4.8-multilib g++-4.8 wget make
+        apt-get install -y linux-libc-dev texlive texinfo valgrind gcc-4.8-multilib g++-4.8 wget make libssl-dev
         wget https://github.com/git/git/archive/v2.18.2.zip -O git.zip
         unzip git.zip
         rm git.zip
